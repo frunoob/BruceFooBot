@@ -17,9 +17,6 @@
 		<java.version>17</java.version>
 	</properties>
 
-	Copyright © frunoob
-	Link: https://frunoob.github.io/list/20230326115706.html
-
 	<repositories>
 		<repository>
 			<id>jitpack.io</id>
