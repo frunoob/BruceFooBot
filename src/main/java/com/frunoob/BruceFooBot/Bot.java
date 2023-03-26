@@ -7,6 +7,7 @@ import org.springframework.http.codec.json.Jackson2JsonDecoder;
 import org.telegram.telegrambots.bots.DefaultBotOptions;
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
 import org.telegram.telegrambots.meta.api.methods.CopyMessage;
+import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.Message;
 import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
@@ -27,9 +28,30 @@ public class Bot extends TelegramLongPollingBot {
         var user = msg.getFrom();
         var id = user.getId();
 
-
         log.info(JSONObject.toJSONString(msg));
-        copyMessage(user.getId(), msg.getMessageId());
+
+        if (msg.isCommand()){
+
+            String text = msg.getText();
+            String [] texts = text.split(" ",2);
+            String command,arg=null;
+            command= texts[0];
+            if (texts.length ==2 )arg = texts[1];
+
+            if (command.equals("/scream")){
+                log.info(command);
+                if (arg!=null) sendMessage(id,arg);
+                else sendMessage(id,"");
+            } else if (command.equals("/whisper")) {
+                log.info(command);
+                if (arg != null) log.info(arg);
+            }
+
+        } else {
+
+            copyMessage(user.getId(), msg.getMessageId());
+
+        }
     }
     public void copyMessage(Long who, Integer msgId){
         CopyMessage cm = CopyMessage.builder()
@@ -41,6 +63,17 @@ public class Bot extends TelegramLongPollingBot {
             execute(cm);
         } catch (TelegramApiException e) {
             throw new RuntimeException(e);
+        }
+    }
+
+    public void sendMessage(Long who,String text){
+        SendMessage message = new SendMessage();
+        message.setChatId(who);
+        message.setText("ahhhhhhhh!" + text);
+        try {
+            execute(message);
+        } catch (TelegramApiException e) {
+            e.printStackTrace();
         }
     }
     @Override
