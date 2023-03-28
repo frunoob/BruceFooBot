@@ -56,6 +56,14 @@ public class BruceFooBotApplication {
 
 			botsApi.registerBot(bot);
 
+			// Actively send messages to somebody
+//			new Thread(new Runnable() {
+//				@Override
+//				public void run() {
+//					bot.sendMessage(<Long Id>,"hello");
+//				}
+//			}).start();
+
 		} catch (TelegramApiException e) {
 			e.printStackTrace();
 		}
